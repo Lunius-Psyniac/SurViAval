@@ -6,6 +6,12 @@ public class ResourceManager : MonoBehaviour
     // Make the ResourceType enum from ResourceZone available here too.
     public enum ResourceType { Food, Toilet, Sleep, Grades }
     
+    [Header("System References")]
+    [Tooltip("Reference to the TimeManager in the scene.")]
+    public TimeManager timeManager;
+    [Tooltip("Reference to the Player's movement script.")]
+    public PlayerMovement playerMovement;
+
     [System.Serializable]
     public class Resource
     {
@@ -59,8 +65,37 @@ public class ResourceManager : MonoBehaviour
         // Decrease resources over time
         DecreaseResource(food);
         DecreaseResource(toilet);
-        DecreaseResource(sleep);
         DecreaseResource(grades);
+
+        // Handle Sleep logic separately because it can be gained or lost.
+        HandleSleep();
+    }
+
+    private void HandleSleep()
+    {
+        // If the player is standing still...
+        if (playerMovement != null && !playerMovement.IsMoving)
+        {
+            float sleepRate = 0;
+            // Check if it's night time (22:00 - 08:00)
+            if (timeManager != null && timeManager.IsNight())
+            {
+                // At night, gain 5% sleep per second.
+                sleepRate = 5f;
+            }
+            else
+            {
+                // During the day, gain 1% sleep per second.
+                sleepRate = 1f;
+            }
+            // Add the calculated amount to the sleep resource.
+            AddToResource(sleep, sleepRate * updateInterval);
+        }
+        else
+        {
+            // If the player is moving, decrease the resource normally.
+            DecreaseResource(sleep);
+        }
     }
 
     void DecreaseResource(Resource resource)

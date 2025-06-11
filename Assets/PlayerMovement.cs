@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     
     // A flag to control whether player input is processed.
     private bool canMove = true;
+    
+    // A public property to check if the player is moving.
+    public bool IsMoving { get; private set; }
 
     void Start()
     {
@@ -60,6 +63,9 @@ public class PlayerMovement : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
         controller.Move(move * speed * Time.deltaTime);
+        
+        // Update the IsMoving status based on player input.
+        IsMoving = move.magnitude > 0.1f;
 
         // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
