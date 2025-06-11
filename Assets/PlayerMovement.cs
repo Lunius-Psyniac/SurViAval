@@ -2,13 +2,17 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player Stats")]
     public float speed = 6f;
     public float pushPower = 2f;
+
+    [Header("Camera Controls")]
     public float mouseSensitivity = 2f;
+    public Transform head; // For vertical rotation
+
+    [Header("Physics")]
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
-
-    public Transform head; // For vertical rotation
     public Transform groundCheck; // We'll create this in Unity
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
@@ -18,6 +22,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
     private bool isGrounded;
+    
+    // A flag to control whether player input is processed.
+    private bool canMove = true;
 
     void Start()
     {
@@ -27,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // If movement is frozen, don't process any input.
+        if (!canMove) return;
+
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -62,8 +72,24 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
+    /// <summary>
+    /// Freezes or unfreezes player movement and look controls.
+    /// </summary>
+    public void SetMovement(bool shouldMove)
+    {
+        canMove = shouldMove;
+    }
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        // --- Study Zone Interaction ---
+        if (hit.gameObject.TryGetComponent<StudyZone>(out StudyZone zone))
+        {
+            FindFirstObjectByType<StudyManager>().OnPlayerEnterZone(zone);
+            return; // Exit early to prevent other physics interactions
+        }
+
+        // --- Pushing Physics Objects ---
         Rigidbody body = hit.collider.attachedRigidbody;
 
         // no rigidbody
