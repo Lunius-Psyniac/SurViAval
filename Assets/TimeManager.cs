@@ -24,10 +24,21 @@ public class TimeManager : MonoBehaviour
 
     void Start()
     {
-        currentTimeHours = startTime;
-        if (sunLight == null || skyboxMaterial == null || clockText == null)
+        // If we are coming from the main menu, reset the time.
+        if (GameState.IsNewGame)
         {
-            Debug.LogError("TimeManager is missing one or more essential references (Sun Light, Skybox Material, or Clock Text)!", this);
+            currentTimeHours = 8f; // Reset time to 8 AM
+            GameState.IsNewGame = false; // Reset the flag so it doesn't run again
+        }
+        else
+        {
+            // Otherwise, use the time set in the inspector (for testing)
+            currentTimeHours = startTime;
+        }
+
+        if (sunLight == null || skyboxMaterial == null)
+        {
+            Debug.LogError("TimeManager is missing a reference to the Sun Light or Skybox Material!", this);
         }
     }
 
@@ -46,7 +57,11 @@ public class TimeManager : MonoBehaviour
         }
 
         // --- UPDATE VISUALS ---
-        UpdateClockUI();
+        // Only update the clock if it has been assigned
+        if (clockText != null)
+        {
+            UpdateClockUI();
+        }
         UpdateLighting();
     }
 

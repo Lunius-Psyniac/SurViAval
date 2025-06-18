@@ -27,9 +27,6 @@ public class ResourceManager : MonoBehaviour
         public float decayRate = 1f; // How fast the resource decreases over time
         public float minValue = 0f;
         public bool isDecaying = true; // New flag to control decay
-        
-        public UnityEvent onResourceEmpty;
-        public UnityEvent onResourceFull;
     }
 
     [Header("Resources")]
@@ -75,6 +72,20 @@ public class ResourceManager : MonoBehaviour
 
         // Handle Sleep logic separately because it can be gained or lost.
         HandleSleep();
+
+        CheckForGameOver();
+    }
+
+    private void CheckForGameOver()
+    {
+        if (food.currentValue <= food.minValue || toilet.currentValue <= toilet.minValue || sleep.currentValue <= sleep.minValue)
+        {
+            GameManager.Instance.TriggerGameOver(GameManager.GameOverReason.PassedOut);
+        }
+        else if (grades.currentValue <= grades.minValue)
+        {
+            GameManager.Instance.TriggerGameOver(GameManager.GameOverReason.Failed);
+        }
     }
 
     private void HandleSleep()
@@ -113,11 +124,6 @@ public class ResourceManager : MonoBehaviour
         }
 
         resource.currentValue = Mathf.Max(resource.minValue, resource.currentValue - resource.decayRate);
-        
-        if (resource.currentValue <= resource.minValue)
-        {
-            resource.onResourceEmpty?.Invoke();
-        }
     }
 
     /// <summary>
@@ -147,27 +153,12 @@ public class ResourceManager : MonoBehaviour
     private void AddToResource(Resource resource, float amount)
     {
         resource.currentValue = Mathf.Min(resource.maxValue, resource.currentValue + amount);
-        
-        if (resource.currentValue >= resource.maxValue)
-        {
-            resource.onResourceFull?.Invoke();
-        }
-        
-        if (resource.currentValue <= resource.minValue)
-        {
-            resource.onResourceEmpty?.Invoke();
-        }
     }
 
     // Public methods to modify resources
     public void SubtractFromResource(Resource resource, float amount)
     {
         resource.currentValue = Mathf.Max(resource.minValue, resource.currentValue - amount);
-        
-        if (resource.currentValue <= resource.minValue)
-        {
-            resource.onResourceEmpty?.Invoke();
-        }
     }
 
     /// <summary>
