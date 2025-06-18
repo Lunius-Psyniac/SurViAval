@@ -1189,6 +1189,8 @@ MonoBehaviour:
     correctAnswer: 24
   - questionText: 'e**(i*pi) + 1 = '
     correctAnswer: 0
+  gradesGained: 20
+  gradesLost: 10
   maxActiveZones: 3
   zoneVisualPrefab: {fileID: 5031400269411534321, guid: 743e33dccbed5aa43a75f49b849455c3, type: 3}
   visualScale: {x: 3, y: 3, z: 3}
@@ -2099,7 +2101,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -5735,7 +5737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startTime: 8
-  secondsPerMinute: 1
+  secondsPerMinute: 10
   sunLight: {fileID: 410087040}
   skyboxMaterial: {fileID: 2100000, guid: 452f82410a59a7f48a0b45c2a51f9e78, type: 2}
   clockText: {fileID: 217414217}
@@ -10840,6 +10842,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeManager: {fileID: 1199497376}
   playerMovement: {fileID: 1796009661}
+  daySleepGainRate: 1
+  nightSleepGainRate: 5
   food:
     name: 
     currentValue: 0

@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public class AppleCollector : MonoBehaviour
 {
+    [Tooltip("How much the Food resource is replenished when this apple is eaten.")]
+    public float foodValue = 20f;
+
     // This function is automatically called by Unity when another collider enters this one.
     private void OnTriggerEnter(Collider other)
     {
@@ -19,7 +22,7 @@ public class AppleCollector : MonoBehaviour
             if (resourceManager != null && appleManager != null)
             {
                 // Call the correct public method on the ResourceManager.
-                resourceManager.AddResource(ResourceManager.ResourceType.Food, 20f);
+                resourceManager.AddResource(ResourceManager.ResourceType.Food, foodValue);
                 
                 // Tell the manager that an apple was eaten so it can respawn one.
                 appleManager.OnAppleEaten();

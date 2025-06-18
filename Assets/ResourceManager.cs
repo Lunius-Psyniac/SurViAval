@@ -12,6 +12,12 @@ public class ResourceManager : MonoBehaviour
     [Tooltip("Reference to the Player's movement script.")]
     public PlayerMovement playerMovement;
 
+    [Header("Sleep Settings")]
+    [Tooltip("The amount of sleep gained per second during the day while resting.")]
+    public float daySleepGainRate = 1f;
+    [Tooltip("The amount of sleep gained per second at night while resting.")]
+    public float nightSleepGainRate = 5f;
+
     [System.Serializable]
     public class Resource
     {
@@ -80,13 +86,13 @@ public class ResourceManager : MonoBehaviour
             // Check if it's night time (22:00 - 08:00)
             if (timeManager != null && timeManager.IsNight())
             {
-                // At night, gain 5% sleep per second.
-                sleepRate = 5f;
+                // At night, gain sleep at the specified rate.
+                sleepRate = nightSleepGainRate;
             }
             else
             {
-                // During the day, gain 1% sleep per second.
-                sleepRate = 1f;
+                // During the day, gain sleep at the specified rate.
+                sleepRate = daySleepGainRate;
             }
             // Add the calculated amount to the sleep resource.
             AddToResource(sleep, sleepRate * updateInterval);

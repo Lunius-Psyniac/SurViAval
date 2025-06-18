@@ -14,6 +14,10 @@ public class StudyManager : MonoBehaviour
     [Header("Quiz Settings")]
     [Tooltip("The list of all possible questions the quiz can ask.")]
     public List<Question> questionPool;
+    [Tooltip("The amount of grades gained for a correct answer.")]
+    public float gradesGained = 20f;
+    [Tooltip("The amount of grades lost for an incorrect answer.")]
+    public float gradesLost = 10f;
     [Tooltip("The number of study zones should be active at any given time.")]
     public int maxActiveZones = 3;
     [Tooltip("The prefab for the visual indicator (the glowing circle).")]
@@ -121,13 +125,13 @@ public class StudyManager : MonoBehaviour
             if (playerAnswer == currentQuestion.correctAnswer)
             {
                 // Correct answer
-                resourceManager.AddResource(ResourceManager.ResourceType.Grades, 20f);
+                resourceManager.AddResource(ResourceManager.ResourceType.Grades, gradesGained);
                 Debug.Log("Correct! Grades increased.");
             }
             else
             {
                 // Incorrect answer
-                resourceManager.SubtractFromResource(resourceManager.grades, 10f);
+                resourceManager.SubtractFromResource(resourceManager.grades, gradesLost);
                 Debug.Log("Incorrect! Grades decreased.");
             }
         }
